@@ -3,12 +3,30 @@ package main
 import (
 	"database/sql"
 	"fmt"
+	"log"
+	"os"
 
 	_ "github.com/ibmdb/go_ibm_db"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	con := "HOSTNAME=localhost;DATABASE=;PORT=50000;UID=db2inst1;PWD="
+	err := godotenv.Load() // load .env file
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	db2_host := os.Getenv("DB2HOST")
+	db2_name := os.Getenv("DBNAME")
+	db2_uid := os.Getenv("DB2UID")
+	db2_pwd := os.Getenv("DB2INST1_PASSWORD")
+
+	con := "HOSTNAME=" + db2_host +
+		";DATABASE=" + db2_name +
+		";PORT=50000" +
+		";UID=" + db2_uid +
+		";PWD=" + db2_pwd
+
 	db, err := sql.Open("go_ibm_db", con)
 	if err != nil {
 		fmt.Println(err)
